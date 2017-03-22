@@ -29,11 +29,15 @@ font pango:Arimo Regular 9, FontAwesome 9
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
+# By switching to a workspace by using mod+# you can then use the same
+# mod + # to switch back to your original workspace.
+workspace_auto_back_and_forth yes
+
 #PREFERED PROGRAMS 
 set $TERM xterm
 set $BROWSER qutebrowser
 set $EDITOR emacsclient -c
-
+set $QUICK_IMG_EDITOR gthumb
 
 # start a terminal
 bindsym $mod+Return exec --no-startup-id $TERM
@@ -49,6 +53,9 @@ bindsym $mod+o exec --no-startup-id thunar
 
 # kill focused window
 bindsym $mod+Shift+q kill
+
+#take screenshot
+bindsym $mod+F1 exec --no-startup-id scrot -e 'mv $f ~/Screenshots/'
 
 # start dmenu (a program launcher)
 #bindsym $mod+d exec dmenu_run
@@ -158,6 +165,8 @@ mode "lock" {
      bindsym $mod+Escape mode "default"
 }
 
+
+
 bindsym $mod+Escape mode "lock"
 
 # same bindings, but for the arrow keys
@@ -183,7 +192,7 @@ gaps outer 15
 bar {
 #  font pango: Terminus 10
   separator_symbol "||"
-  status_command i3status #-c /home/theo/.config/i3status/config 
+  status_command i3status
   colors {
     separator #551a8b
     background #000000
@@ -201,12 +210,12 @@ set $WALLPAPER_PATH "/home/theo/.config/i3/wallpaper.jpg"
 #exec xrandr --output DVI-I-1 --auto --right-of DVI-D-0
 #enable sideways scrolling
 exec_always --no-startup-id xinput --set-prop 11 "Synaptics Two-Finger Scrolling" 1, 1
-#enable layout switching
-exec_always --no-startup-id setxkbmap -layout us,gr
+#enable layout switching with right win
+exec_always --no-startup-id setxkbmap -layout us,gr -option grp:rwin_toggle
 #wallpaper
 exec_always --no-startup-id feh --bg-scale $WALLPAPER_PATH
 #start composite manager
-exec_always --no-startup-id compton #--config /home/theo/.config/compton.conf
+exec_always --no-startup-id compton
 #start network manager applet
 exec_always --no-startup-id nm-applet
 #start dropbox
@@ -217,7 +226,7 @@ exec_always --no-startup-id emacs --daemon
 exec_always --no-startup-id ~/.conky/conky-startup.sh
 #start klipper
 #exec_always --no-startiup-id klipper
-exec_always --no-startup-id xfsettingsd --sm-client-disable &
+#exec_always --no-startup-id xfsettingsd --sm-client-disable &
 #exec_always --no-startup-id xfce4-panel -d  &
 
 client.focused #3b1261 #3b1261 #ffffff #662b9c
