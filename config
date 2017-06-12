@@ -33,21 +33,31 @@ floating_modifier $mod
 # mod + # to switch back to your original workspace.
 workspace_auto_back_and_forth yes
 
+####
+set $EXEC_OR_FOCUS exec --no-startup-id python ~/.config/i3/exec_or_focus.py
 #PREFERED PROGRAMS 
 set $TERM xterm
+set $TERM_CLASS XTerm
+
 set $BROWSER qutebrowser
-set $EDITOR emacsclient -c
-set $QUICK_IMG_EDITOR gthumb
+set $BROWSER_CLASS qutebrowser
+
+set $EDITOR emacsclient --create-frame --alternate-editor=""
+#makes the client start a server if one doesn't exist
+set $EDITOR_CLASS Emacs
+#assign emacs to it's own workspace
+#assign [class="^$EDITOR_CLASS$"] → "emacs" #or perhaps not
 
 # start a terminal
+#bindsym $mod+Return exec --no-startup-id $TERM
 bindsym $mod+Return exec --no-startup-id $TERM
-		    #exec i3-sensible-terminal
 # start a browser
-bindsym $mod+Shift+b exec --no-startup-id $BROWSER
+#bindsym $mod+Shift+b exec --no-startup-id $BROWSER
+bindsym $mod+Shift+b $EXEC_OR_FOCUS $BROWSER_CLASS $BROWSER
 
 # start editor
-bindsym $mod+i exec --no-startup-id $EDITOR
-
+#bindsym $mod+i exec --no-startup-id $EDITOR
+bindsym $mod+i $EXEC_OR_FOCUS $EDITOR_CLASS "$EDITOR"
 # start file manager
 bindsym $mod+o exec --no-startup-id thunar
 
@@ -62,7 +72,7 @@ bindsym $mod+F1 exec --no-startup-id scrot -e 'mv $f ~/Screenshots/'
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
-
+for_window [class=".*"] title_format "<span font_size='large'><b>%title</b></span>"
 
 
 bindsym $mod+d exec --no-startup-id i3-dmenu-desktop --dmenu="rofi -dmenu -p 'Run: ' -i -fullscreen -font 'pango: Arimo 13' "
@@ -92,10 +102,10 @@ bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
-bindsym $mod+Shift+v split h
+#bindsym $mod+Shift+v split h
 
 # split in vertical orientation
-bindsym $mod+v split v
+bindsym $mod+v split toggle
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
@@ -183,7 +193,8 @@ bindsym $mod+Escape mode "lock"
 #bindsym $mod+r mode "resize"
 
 
-for_window [class="^.*"] border pixel 5
+for_window [class="^.*"] border normal 5
+
 gaps inner 10
 gaps outer 15
 
@@ -191,15 +202,16 @@ gaps outer 15
 # finds out, if available)
 bar {
 #  font pango: Terminus 10
-  separator_symbol "||"
+
+  separator_symbol " "
   status_command i3status
   colors {
-    separator #551a8b
+    separator #ffffff
     background #000000
     statusline #ffffff
-    focused_workspace #551a8b #551a8b #ffffff
-    active_workspace #333333 #5f676a #ffffff
-    inactive_workspace #000000 #000000 #888888
+    focused_workspace #00ffff #000000 #00ffff
+    active_workspace #333333 #000000 #ffffff
+    inactive_workspace #003030 #000000 #003030
     urgent_workspace #2f343a #900000 #ffffff
   }
 }
@@ -219,6 +231,11 @@ exec_always --no-startup-id compton
 #start network manager applet
 exec_always --no-startup-id nm-applet
 #start dropbox
+#start composite manager
+exec_always --no-startup-id compton
+#start network manager applet
+exec_always --no-startup-id nm-applet
+#start dropbox
 exec_always --no-startup-id dropbox
 #start emacs server
 exec_always --no-startup-id emacs --daemon
@@ -229,7 +246,8 @@ exec_always --no-startup-id ~/.conky/conky-startup.sh
 #exec_always --no-startup-id xfsettingsd --sm-client-disable &
 #exec_always --no-startup-id xfce4-panel -d  &
 
-client.focused #3b1261 #3b1261 #ffffff #662b9c
+client.focused #003030 #006060 #ffffff #00ffff
 client.focused_inactive #333333 #5f676a #ffffff #484e50
-client.unfocused #222222 #222222 #888888 #292d2e
+client.unfocused #004040 #004040 #888888 #292d2e
 client.urgent #2f343a #900000 #ffffff #900000
+
