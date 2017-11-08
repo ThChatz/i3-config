@@ -13,7 +13,7 @@ set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:Arimo Regular 9, FontAwesome 9
+font pango:Arimo Regular 7, FontAwesome 7
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -36,11 +36,11 @@ workspace_auto_back_and_forth yes
 ####
 set $EXEC_OR_FOCUS exec --no-startup-id python ~/.config/i3/exec_or_focus.py
 #PREFERED PROGRAMS 
-set $TERM xterm
+set $TERM "xterm -u8"
 set $TERM_CLASS XTerm
 
 set $BROWSER qutebrowser
-set $BROWSER_CLASS qutebrowser
+set $BROWSER_CLASS opera
 
 set $EDITOR emacsclient --create-frame --alternate-editor=""
 #makes the client start a server if one doesn't exist
@@ -49,15 +49,14 @@ set $EDITOR_CLASS Emacs
 #assign [class="^$EDITOR_CLASS$"] → "emacs" #or perhaps not
 
 # start a terminal
-#bindsym $mod+Return exec --no-startup-id $TERM
 bindsym $mod+Return exec --no-startup-id $TERM
 # start a browser
-#bindsym $mod+Shift+b exec --no-startup-id $BROWSER
-bindsym $mod+Shift+b $EXEC_OR_FOCUS $BROWSER_CLASS $BROWSER
+bindsym $mod+Shift+b exec --no-startup-id $BROWSER
+#bindsym $mod+Shift+b $EXEC_OR_FOCUS $BROWSER_CLASS $BROWSER
 
 # start editor
-#bindsym $mod+i exec --no-startup-id $EDITOR
-bindsym $mod+i $EXEC_OR_FOCUS $EDITOR_CLASS "$EDITOR"
+bindsym $mod+i exec --no-startup-id $EDITOR
+#bindsym $mod+i $EXEC_OR_FOCUS $EDITOR_CLASS "$EDITOR"
 # start file manager
 bindsym $mod+o exec --no-startup-id thunar
 
@@ -72,21 +71,23 @@ bindsym $mod+F1 exec --no-startup-id scrot -e 'mv $f ~/Screenshots/'
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
-for_window [class=".*"] title_format "<span font_size='large'><b>%title</b></span>"
+for_window [class=".*"] title_format "<span font_size='small' font_desc='Arimo 9'>%title</span>"
 
 
-bindsym $mod+d exec --no-startup-id i3-dmenu-desktop --dmenu="rofi -dmenu -p 'Run: ' -i -fullscreen -font 'pango: Arimo 13' "
+bindsym $mod+d exec --no-startup-id i3-dmenu-desktop --dmenu="rofi -dmenu -p 'Launch Application: ' -i  -font ' pango: Arimo 16' -fullscreen"
 
-# change focus
-bindsym $mod+h focus left
-bindsym $mod+j focus down
-bindsym $mod+k focus up
-bindsym $mod+l focus right
+bindsym $mod+Tab exec --no-startup-id rofi -terminal $TERM -show window 
+
+
+bindsym $mod+h  focus left
+bindsym $mod+j  focus down
+bindsym $mod+k  focus up 
+bindsym $mod+l  focus right
 
 # alternatively, you can use the cursor keys:
-bindsym $mod+left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
+bindsym $mod+left  focus left 
+bindsym $mod+Down  focus down 
+bindsym $mod+Up    focus up   
 bindsym $mod+Right focus right
 
 # move focused window
@@ -101,15 +102,13 @@ bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-# split in horizontal orientation
-#bindsym $mod+Shift+v split h
 
-# split in vertical orientation
+# toggle split orientation
 bindsym $mod+v split toggle
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
-
+bindsym f13 fullscreen toggle
 # change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
@@ -125,6 +124,7 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 
 # focus the child container
+
 bindsym $mod+q focus child
 
 # switch to workspace
@@ -138,6 +138,9 @@ bindsym $mod+7 workspace 7
 bindsym $mod+8 workspace 8
 bindsym $mod+9 workspace 9
 bindsym $mod+0 workspace 10
+
+bindsym $mod+n workspace prev
+bindsym $mod+m workspace next
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace 1
@@ -156,16 +159,13 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'logout' 'i3-msg exit' -b 'shutdown' 'i3-msg exit; shutdown 0' -b 'reboot' 'i3-msg exit; shutdown 0 -r'"
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'logout' 'i3-msg exit'"
+# lock screen using dm-tool
+bindsym $mod+Shift+Escape exec "dm-tool switch-to-greeter"
+
+
 
 # resize window (you can also use the mouse for that)
-#mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
-
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
 bindsym $mod+Shift+y resize shrink width 10 px or 10 ppt
 bindsym $mod+Shift+u resize grow height 10 px or 10 ppt
 bindsym $mod+Shift+i resize shrink height 10 px or 10 ppt
@@ -179,39 +179,58 @@ mode "lock" {
 
 bindsym $mod+Escape mode "lock"
 
-# same bindings, but for the arrow keys
-#bindsym Left resize shrink width 10 px or 10 ppt
-#bindsym Down resize grow height 10 px or 10 ppt
-#bindsym Up resize shrink height 10 px or 10 ppt
-#bindsym Right resize grow width 10 px or 10 ppt
+#multimedia keys
+# Pulse Audio controls
+bindsym XF86AudioRaiseVolume exec --no-startup-id pulseaudio-ctl up #increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pulseaudio-ctl down #decrease sound volume
+bindsym XF86AudioMute exec --no-startup-id pulseaudio-ctl mute # mute sound
 
-        # back to normal: Enter or Escape
-#        bindsym Return mode "default"
-#        bindsym Escape mode "default"
-#}
+# Sreen brightness controls
+bindsym XF86MonBrightnessUp exec brightnessctl.py inc 20 # increase screen brightness
+bindsym $mod+XF86MonBrightnessUp exec brightnessctl.py inc 5 # increase screen brightness (lower step)
 
-#bindsym $mod+r mode "resize"
+bindsym XF86MonBrightnessDown exec brightnessctl.py dec 20 # decrease screen brightness
+bindsym $mod+XF86MonBrightnessDown exec brightnessctl.py dec 5 # decrease screen brightness (lower step)
+
+# Touchpad controls
+bindsym XF86TouchpadToggle exec /some/path/toggletouchpad.sh # toggle touchpad
+
+# Media player controls
+bindsym XF86AudioPlay exec playerctl play
+bindsym XF86AudioPause exec playerctl pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
 
 
-for_window [class="^.*"] border normal 5
+
+
+
+new_window pixel 2px
+for_window [class="^gnome-pie-\d+"] border none
+smart_borders enable
 
 gaps inner 10
-gaps outer 15
+smart_gaps enable
+
+popup_during_fullscreen leave_fullscreen
+
+
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-#  font pango: Terminus 10
-
-  separator_symbol " "
-  status_command i3status
+  font pango: Arimo 7
+  position top
+  separator_symbol " / "
+  status_command i3status -c ~/.config/i3/bar_config
   colors {
-    separator #ffffff
+    separator #0043a8
     background #000000
-    statusline #ffffff
-    focused_workspace #00ffff #000000 #00ffff
-    active_workspace #333333 #000000 #ffffff
-    inactive_workspace #003030 #000000 #003030
+    statusline #00A5ff
+    
+    focused_workspace #000000 #000000 #0066ff
+    active_workspace #000000 #000000 #ffffff
+    inactive_workspace #000000 #000000 #006060
     urgent_workspace #2f343a #900000 #ffffff
   }
 }
@@ -220,17 +239,23 @@ bar {
 set $WALLPAPER_PATH "/home/theo/.config/i3/wallpaper.jpg"
 #home_setup
 #exec xrandr --output DVI-I-1 --auto --right-of DVI-D-0
+
+#touch stuff
+exec --no-startup-id touchegg
+exec --no-startup-id gnome-pie
+exec --no-startup-id easystroke
+#touch pen
+exec --no-startup-id xsetwacom --set "Wacom Co.,Ltd. Pen and multitouch sensor Pen stylus" Button 2 3
+
+#border on focus
+exec_always --no-startup-id ~/.config/i3/border_on_focus.sh
+
 #enable sideways scrolling
 exec_always --no-startup-id xinput --set-prop 11 "Synaptics Two-Finger Scrolling" 1, 1
-#enable layout switching with right win
-exec_always --no-startup-id setxkbmap -layout us,gr -option grp:rwin_toggle
+#enable layout switching with both shifts
+exec_always --no-startup-id setxkbmap -layout us,gr -option grp:shifts_toggle
 #wallpaper
 exec_always --no-startup-id feh --bg-scale $WALLPAPER_PATH
-#start composite manager
-exec_always --no-startup-id compton
-#start network manager applet
-exec_always --no-startup-id nm-applet
-#start dropbox
 #start composite manager
 exec_always --no-startup-id compton
 #start network manager applet
@@ -244,10 +269,17 @@ exec_always --no-startup-id ~/.conky/conky-startup.sh
 #start klipper
 #exec_always --no-startiup-id klipper
 #exec_always --no-startup-id xfsettingsd --sm-client-disable &
-#exec_always --no-startup-id xfce4-panel -d  &
+#monitor calibration
+exec --no-startup-id ~/.monicarc
 
-client.focused #003030 #006060 #ffffff #00ffff
-client.focused_inactive #333333 #5f676a #ffffff #484e50
-client.unfocused #004040 #004040 #888888 #292d2e
+#xfce panel
+#exec --no-startup-id xfce4-panel -d
+
+
+#<colorclass> <border> <background> <text> <indicator> <child_border>
+
+client.focused #003030 #0055bb #ffcc00 #00A5ff
+client.focused_inactive #002244 #002266 #ffffff #002266
+client.unfocused #002244 #002266 #ffffff #002266
 client.urgent #2f343a #900000 #ffffff #900000
 
