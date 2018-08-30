@@ -13,18 +13,7 @@ set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:Arimo Regular 7, FontAwesome 7
-
-# This font is widely installed, provides lots of unicode glyphs, right-to-left
-# text rendering and scalability on retina/hidpi displays (thanks to pango).
-#font pango:DejaVu Sans Mono 8
-
-# Before i3 v4.8, we used to recommend this one as the default:
-# font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
-# The font above is very space-efficient, that is, it looks good, sharp and
-# clear in small sizes. However, its unicode glyph coverage is limited, the old
-# X core fonts rendering does not support right-to-left and this being a bitmap
-# font, it doesn’t scale on retina/hidpi displays.
+font pango:Arimo Regular 12, FontAwesome 7
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -33,20 +22,15 @@ floating_modifier $mod
 # mod + # to switch back to your original workspace.
 workspace_auto_back_and_forth yes
 
+
+
+
 ####
-set $EXEC_OR_FOCUS exec --no-startup-id python ~/.config/i3/exec_or_focus.py
 #PREFERED PROGRAMS 
-set $TERM "xterm -u8"
-set $TERM_CLASS XTerm
-
-set $BROWSER qutebrowser
-set $BROWSER_CLASS opera
-
+set $TERM "urxvt"
+set $BROWSER "opera"
 set $EDITOR emacsclient --create-frame --alternate-editor=""
 #makes the client start a server if one doesn't exist
-set $EDITOR_CLASS Emacs
-#assign emacs to it's own workspace
-#assign [class="^$EDITOR_CLASS$"] → "emacs" #or perhaps not
 
 # start a terminal
 bindsym $mod+Return exec --no-startup-id $TERM
@@ -58,8 +42,7 @@ bindsym $mod+Shift+b exec --no-startup-id $BROWSER
 bindsym $mod+i exec --no-startup-id $EDITOR
 #bindsym $mod+i $EXEC_OR_FOCUS $EDITOR_CLASS "$EDITOR"
 # start file manager
-bindsym $mod+o exec --no-startup-id thunar
-
+bindsym $mod+o exec thunar
 # kill focused window
 bindsym $mod+Shift+q kill
 
@@ -74,9 +57,9 @@ bindsym $mod+F1 exec --no-startup-id scrot -e 'mv $f ~/Screenshots/'
 for_window [class=".*"] title_format "<span font_size='small' font_desc='Arimo 9'>%title</span>"
 
 
-bindsym $mod+d exec --no-startup-id i3-dmenu-desktop --dmenu="rofi -dmenu -p 'Launch Application: ' -i  -font ' pango: Arimo 16' -fullscreen"
+bindsym $mod+d exec --no-startup-id i3-dmenu-desktop --dmenu="dmenu -p 'Launch Application: ' -config ~/.config/i3/rofirc -i"
 
-bindsym $mod+Tab exec --no-startup-id rofi -terminal $TERM -show window 
+bindsym $mod+Tab exec --no-startup-id rofi -config ~/.config/i3/rofirc -terminal $TERM -show window 
 
 
 bindsym $mod+h  focus left
@@ -124,7 +107,6 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 
 # focus the child container
-
 bindsym $mod+q focus child
 
 # switch to workspace
@@ -181,9 +163,9 @@ bindsym $mod+Escape mode "lock"
 
 #multimedia keys
 # Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pulseaudio-ctl up #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pulseaudio-ctl down #decrease sound volume
-bindsym XF86AudioMute exec --no-startup-id pulseaudio-ctl mute # mute sound
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% #increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% #decrease sound volume
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle # mute sound
 
 # Sreen brightness controls
 bindsym XF86MonBrightnessUp exec brightnessctl.py inc 20 # increase screen brightness
@@ -205,7 +187,8 @@ bindsym XF86AudioPrev exec playerctl previous
 
 
 
-new_window pixel 2px
+#new_window pixel 2px
+for_window [class=.] border pixel 2
 for_window [class="^gnome-pie-\d+"] border none
 smart_borders enable
 
@@ -218,22 +201,22 @@ popup_during_fullscreen leave_fullscreen
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-bar {
-  font pango: Arimo 7
-  position top
-  separator_symbol " / "
-  status_command i3status -c ~/.config/i3/bar_config
-  colors {
-    separator #0043a8
-    background #000000
-    statusline #00A5ff
-    
-    focused_workspace #000000 #000000 #0066ff
-    active_workspace #000000 #000000 #ffffff
-    inactive_workspace #000000 #000000 #006060
-    urgent_workspace #2f343a #900000 #ffffff
-  }
-}
+# bar {
+#   font pango: Arimo 7
+#   position top
+#   separator_symbol " / "
+#   status_command i3status -c ~/.config/i3/bar_config
+#   colors {
+#     separator #0043a8
+#     background #000000
+#     statusline #00A5ff
+  
+#     focused_workspace #000000 #000000 #0066ff
+#     active_workspace #000000 #000000 #ffffff
+#     inactive_workspace #000000 #000000 #006060
+#     urgent_workspace #2f343a #900000 #ffffff
+#   }
+# }
 
 
 set $WALLPAPER_PATH "/home/theo/.config/i3/wallpaper.jpg"
@@ -248,7 +231,7 @@ exec --no-startup-id easystroke
 exec --no-startup-id xsetwacom --set "Wacom Co.,Ltd. Pen and multitouch sensor Pen stylus" Button 2 3
 
 #border on focus
-exec_always --no-startup-id ~/.config/i3/border_on_focus.sh
+#exec_always --no-startup-id ~/.config/i3/border_on_focus.sh
 
 #enable sideways scrolling
 exec_always --no-startup-id xinput --set-prop 11 "Synaptics Two-Finger Scrolling" 1, 1
@@ -275,11 +258,11 @@ exec --no-startup-id ~/.monicarc
 #xfce panel
 #exec --no-startup-id xfce4-panel -d
 
+exec --no-startup-id polybar -c ~/.config/polybar/config bar1
 
 #<colorclass> <border> <background> <text> <indicator> <child_border>
 
-client.focused #003030 #0055bb #ffcc00 #00A5ff
-client.focused_inactive #002244 #002266 #ffffff #002266
-client.unfocused #002244 #002266 #ffffff #002266
+client.focused #003030 #a08000 #ffcc00 #00A5ff
+client.focused_inactive #222222 #222222 #ffffff #002266
+client.unfocused #222222 #222222 #ffffff #002266
 client.urgent #2f343a #900000 #ffffff #900000
-
