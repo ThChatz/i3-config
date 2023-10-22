@@ -30,6 +30,7 @@ workspace_auto_back_and_forth yes
 set $TERM "urxvt"
 set $BROWSER "opera"
 set $EDITOR emacsclient --create-frame --alternate-editor=""
+set $FILE_MGR pcmanfm
 #makes the client start a server if one doesn't exist
 
 # start a terminal
@@ -42,7 +43,7 @@ bindsym $mod+Shift+b exec --no-startup-id $BROWSER
 bindsym $mod+i exec --no-startup-id $EDITOR
 #bindsym $mod+i $EXEC_OR_FOCUS $EDITOR_CLASS "$EDITOR"
 # start file manager
-bindsym $mod+o exec thunar
+bindsym $mod+o exec $FILE_MGR
 # kill focused window
 bindsym $mod+Shift+q kill
 
@@ -57,9 +58,9 @@ bindsym $mod+F1 exec --no-startup-id scrot -e 'mv $f ~/Screenshots/'
 for_window [class=".*"] title_format "<span font_size='small' font_desc='Arimo 9'>%title</span>"
 
 
-bindsym $mod+d exec --no-startup-id i3-dmenu-desktop --dmenu="dmenu -p 'Launch Application: ' -config ~/.config/i3/rofirc -i"
+bindsym $mod+d exec --no-startup-id i3-dmenu-desktop --dmenu="rofi -dmenu -p 'Launch Application: ' -i"
 
-bindsym $mod+Tab exec --no-startup-id rofi -config ~/.config/i3/rofirc -terminal $TERM -show window 
+bindsym $mod+Tab exec --no-startup-id rofi -terminal $TERM -show window
 
 
 bindsym $mod+h  focus left
