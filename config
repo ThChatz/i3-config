@@ -28,7 +28,7 @@ workspace_auto_back_and_forth yes
 ####
 #PREFERED PROGRAMS 
 set $TERM "urxvt"
-set $BROWSER "opera"
+set $BROWSER "firefox"
 set $EDITOR emacsclient --create-frame --alternate-editor=""
 set $FILE_MGR pcmanfm
 #makes the client start a server if one doesn't exist
@@ -153,6 +153,7 @@ bindsym $mod+Shift+y resize shrink width 10 px or 10 ppt
 bindsym $mod+Shift+u resize grow height 10 px or 10 ppt
 bindsym $mod+Shift+i resize shrink height 10 px or 10 ppt
 bindsym $mod+Shift+o resize grow width 10 px or 10 ppt
+ 
 
 mode "lock" {
      bindsym $mod+Escape mode "default"
@@ -164,16 +165,20 @@ bindsym $mod+Escape mode "lock"
 
 #multimedia keys
 # Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% #decrease sound volume
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle # mute sound
+bindsym XF86AudioRaiseVolume exec --no-startup-id pamixer -i5
+bindsym XF86AudioLowerVolume exec --no-startup-id pamixer -d5
+# toggle mute
+bindsym XF86AudioMute exec --no-startup-id \\
+echo 'pamixer $([ $(pamixer --get-mute) = "true" ] && \
+     	      echo "-u" || \
+	      echo "-m")' | sh 	#long boi
 
 # Sreen brightness controls
-bindsym XF86MonBrightnessUp exec brightnessctl.py inc 20 # increase screen brightness
-bindsym $mod+XF86MonBrightnessUp exec brightnessctl.py inc 5 # increase screen brightness (lower step)
+bindsym XF86MonBrightnessUp exec brightnessctl set +20% # increase screen brightness
+bindsym $mod+XF86MonBrightnessUp exec brightnessctl set +5% # increase screen brightness (lower step)
 
-bindsym XF86MonBrightnessDown exec brightnessctl.py dec 20 # decrease screen brightness
-bindsym $mod+XF86MonBrightnessDown exec brightnessctl.py dec 5 # decrease screen brightness (lower step)
+bindsym XF86MonBrightnessDown exec brightnessctl set 20%- # decrease screen brightness
+bindsym $mod+XF86MonBrightnessDown exec brightnessctl set 5%- # decrease screen brightness (lower step)
 
 # Touchpad controls
 bindsym XF86TouchpadToggle exec /some/path/toggletouchpad.sh # toggle touchpad
@@ -220,7 +225,7 @@ popup_during_fullscreen leave_fullscreen
 # }
 
 
-set $WALLPAPER_PATH "/home/theo/.config/i3/wallpaper.jpg"
+set $WALLPAPER_PATH "~/.config/i3/wallpaper.jpg"
 #home_setup
 #exec xrandr --output DVI-I-1 --auto --right-of DVI-D-0
 
@@ -239,9 +244,9 @@ exec_always --no-startup-id xinput --set-prop 11 "Synaptics Two-Finger Scrolling
 #enable layout switching with both shifts
 exec_always --no-startup-id setxkbmap -layout us,gr -option grp:shifts_toggle
 #wallpaper
-exec_always --no-startup-id feh --bg-scale $WALLPAPER_PATH
+exec_always --no-startup-id sh -c "feh --bg-scale $WALLPAPER_PATH"
 #start composite manager
-exec_always --no-startup-id compton
+exec_always --no-startup-id picom
 #start network manager applet
 exec_always --no-startup-id nm-applet
 #start dropbox
